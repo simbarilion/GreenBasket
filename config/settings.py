@@ -1,9 +1,10 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+
 from dotenv import load_dotenv
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env", override=True)
 
@@ -23,10 +24,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "django_filters",
+    # "django_filters",
     "drf_yasg",
     "corsheaders",
     "rest_framework_simplejwt",
+    "phonenumber_field",
+    "users",
 ]
 
 MIDDLEWARE = [
