@@ -11,9 +11,15 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from users.models import CustomUser
-from users.serializers import LoginSerializer, RegisterSerializer, UserProfileSerializer
-from users.tokens import account_activation_token
+from config import settings
+from users.serializers import (
+    LoginSerializer,
+    PasswordResetConfirmSerializer,
+    PasswordResetRequestSerializer,
+    RegisterSerializer,
+    UserProfileSerializer,
+)
+from users.tokens import token_generator
 
 logger = logging.getLogger("green_basket.users")
 User = get_user_model()
@@ -35,12 +41,12 @@ class RegisterView(generics.CreateAPIView):
         """
         user = serializer.save()
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = account_activation_token.make_token(user)
-        verify_url = self.request.build_absolute_uri(reverse("users:verify-email") + f"?uid={uid}&token={token}")
+        token = token_generator.make_token(user)
+        verify_url = self.request.build_absolute_uri(reverse("users:activate") + f"?uid={uid}&token={token}")
         send_mail(
-            subject="Подтверждение email",
-            message=f"Перейдите по ссылке для подтверждения email: {verify_url}",
-            from_email=None,
+            subject="Подтверждение регистрации",
+            message=f"Перейдите по ссылке для для активации: {verify_url}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
             fail_silently=False,
         )
@@ -58,11 +64,11 @@ class VerifyEmailView(generics.GenericAPIView):
 
         try:
             user_id = force_str(urlsafe_base64_decode(uid))
-            user = CustomUser.objects.get(pk=user_id)
+            user = User.objects.get(pk=user_id)
         except Exception:
             return Response({"detail": "Неверная ссылка"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if account_activation_token.check_token(user, token):
+        if token_generator.check_token(user, token):
             user.is_active = True
             user.is_verified = True
             user.save(update_fields=["is_active", "is_verified"])
@@ -76,7 +82,9 @@ class UserLoginView(generics.GenericAPIView):
     """Авторизация пользователя"""
 
     serializer_class = LoginSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [
+        AllowAny,
+    ]
 
     def post(self, request):
         """Проверяет пользователя по токену"""
@@ -91,8 +99,96 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     """Профиль пользователя"""
 
     serializer_class = UserProfileSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [
+        IsAuthenticated,
+    ]
 
     def get_object(self):
         """Возвращает объект пользователя"""
         return self.request.user
+
+
+class LogoutView(generics.GenericAPIView):
+    """Выход пользователя из профиля"""
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request):
+        try:
+            request.user.auth_token.delete()
+        except Exception:
+            pass
+        return Response({"detail": "Успешный выход из профиля"}, status=status.HTTP_200_OK)
+
+
+class PasswordResetRequestView(generics.GenericAPIView):
+    """Сброс пароля аккаунта пользователя"""
+
+    serializer_class = PasswordResetRequestSerializer
+    permission_classes = [
+        AllowAny,
+    ]
+
+    def post(self, request):
+        """Сброс пароля, отправка письма для подтверждения"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data["email"]
+        user = User.objects.filter(email=email).first()
+        if not user:
+            return Response(
+                {"detail": "Если адрес электронной почты существует, будет отправлена ссылка для сброса пароля"},
+                status=status.HTTP_200_OK,
+            )
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = token_generator.make_token(user)
+        reset_link = f"http://localhost:8000/api/users/password-reset-confirm/?uid={uid}&token={token}"
+
+        send_mail(
+            subject="Password reset",
+            message=f"Reset link: {reset_link}",
+            from_email=None,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+        return Response(
+            {"detail": "Если адрес электронной почты существует, будет отправлена ссылка для сброса пароля"},
+            status=status.HTTP_200_OK,
+        )
+
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+    """Изменение пароля аккаунта пользователя"""
+
+    serializer_class = PasswordResetConfirmSerializer
+    permission_classes = [
+        AllowAny,
+    ]
+
+    def post(self, request):
+        """Подтверждение смены пароля, сохранение нового пароля"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        uid = serializer.validated_data["uid"]
+        token = serializer.validated_data["token"]
+        new_password = serializer.validated_data["new_password"]
+
+        try:
+            user_id = force_str(urlsafe_base64_decode(uid))
+            user = User.objects.get(pk=user_id)
+        except Exception:
+            return Response({"detail": "Ссылка недействительна или устарела"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not token_generator.check_token(user, token):
+            return Response({"detail": "Недействительный токен"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save(update_fields=["password"])
+        Token.objects.filter(user=user).delete()
+
+        return Response({"detail": "Пароль успешно изменен"}, status=status.HTTP_200_OK)

@@ -58,5 +58,27 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ("id", "email", "username", "phone_number", "city", "is_verified")
-        read_only_fields = ("id", "email", "is_verified")
+        fields = ("email", "username", "phone_number", "city", "is_verified")
+        read_only_fields = ("email", "is_verified")
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    """Сериализатор для сброса пароля"""
+
+    email = serializers.EmailField()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """Сериализатор для сохранения нового пароля"""
+
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(
+        write_only=True,
+        validators=[
+            validate_password,
+        ],
+    )
+
+    def validate(self, attrs):
+        return attrs

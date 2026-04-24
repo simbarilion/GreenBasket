@@ -1,3 +1,3 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-account_activation_token = PasswordResetTokenGenerator()
+token_generator = PasswordResetTokenGenerator()
