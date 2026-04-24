@@ -18,12 +18,13 @@ class CustomUser(AbstractUser):
     """Класс модели пользователя"""
 
     email = models.EmailField(unique=True, verbose_name="Email")
-    email_new = models.EmailField(blank=True, null=True)
-    email_confirmed = models.BooleanField(default=True)
     phone_number = PhoneNumberField(
         region="RU", blank=True, null=True, verbose_name="Номер телефона", help_text="Необязательное поле"
     )
-    city = models.ForeignKey(to=City, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Город")
+    city = models.ForeignKey(
+        City, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Город", related_name="users"
+    )
+    is_verified = models.BooleanField(default=False, verbose_name="Email подтвержден")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [
