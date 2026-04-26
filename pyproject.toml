@@ -17,6 +17,11 @@ pillow = "^12.2.0"
 djangorestframework-simplejwt = "^5.5.1"
 drf-yasg = "^1.21.15"
 django-cors-headers = "^4.9.0"
+psycopg2 = "^2.9.12"
+django-phonenumber-field = "^8.4.0"
+phonenumbers = "^9.0.28"
+djangorestframework-stubs = "^3.16.9"
+django-filter = "^25.2"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
