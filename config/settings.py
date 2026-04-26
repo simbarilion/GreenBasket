@@ -24,11 +24,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    # "django_filters",
+    "django_filters",
     "drf_yasg",
     "corsheaders",
     "rest_framework_simplejwt",
-    "rest_framework.authtoken",
+    "rest_framework_simplejwt.token_blacklist",
     "phonenumber_field",
     "users",
 ]
@@ -50,7 +50,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            BASE_DIR / "greenbasket" / "templates",
+            BASE_DIR / "templates",
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -129,8 +129,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 # Users settings
 
 AUTHENTICATION_BACKENDS = [
-    "users.backends.EmailBackendAllowInactive",  # к кастомному backend
-    "django.contrib.auth.backends.ModelBackend",  # для админки, базовый бэкенд аутентификации
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 AUTH_USER_MODEL = "users.CustomUser"
@@ -143,6 +142,9 @@ LOGIN_URL = "users:login"
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 
@@ -157,7 +159,6 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 12,
@@ -169,7 +170,7 @@ SWAGGER_USE_COMPAT_RENDERERS = False
 
 CORS_ALLOWED_ORIGINS = os.getenv("ALLOWED_URLS", "").split(",")
 
-CSRF_TRUSTED_ORIGINS = os.getenv("ALLOWED_URLS").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("ALLOWED_URLS", "").split(",")
 
 # Mail server settings
 

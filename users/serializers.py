@@ -1,13 +1,18 @@
-from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import CustomUser
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    """Сериализатор регистрации пользователя"""
+    """
+    Сериализатор регистрации пользователя:
+    - проверка совпадения паролей
+    - валидация пароля через Django validators
+    - создание неактивного пользователя
+    """
 
     password = serializers.CharField(write_only=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True)
@@ -19,38 +24,21 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         """Валидация повторного ввода пароля"""
         if attrs["password"] != attrs["password2"]:
-            raise serializers.ValidationError({"password": "Пароли не совпадают."})
+            raise serializers.ValidationError({"password": "Пароли не совпадают"})
         return attrs
 
     def create(self, validated_data):
-        """Создает и сохраняет в БД объект пользователя"""
+        """Создает и сохраняет в БД объект неактивного пользователя"""
         validated_data.pop("password2")
         password = validated_data.pop("password")
-        user = CustomUser(**validated_data)
-        user.is_active = False
-        user.is_verified = False
-        user.set_password(password)
-        user.save()
+        user = CustomUser.objects.create_user(password=password, is_active=False, is_verified=False, **validated_data)
         return user
 
 
-class LoginSerializer(serializers.Serializer):
-    """Сериализатор для авторизации пользователя"""
+class CustomTokenSerializer(TokenObtainPairSerializer):
+    """JWT-сериализатор для аутентификации по email вместо username"""
 
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
-
-    def validate(self, attrs):
-        """Валидация логина и пароля пользователя при входе"""
-        email = attrs.get("email")
-        password = attrs.get("password")
-        user = authenticate(username=email, password=password)
-        if not user:
-            raise serializers.ValidationError("Неверный email или пароль")
-        if not user.is_verified:
-            raise serializers.ValidationError("Email не подтвержден")
-        attrs["user"] = user
-        return attrs
+    username_field = "email"
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -69,7 +57,13 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
-    """Сериализатор для сохранения нового пароля"""
+    """
+    Сериализатор подтверждения сброса пароля:
+    Ожидает:
+    - uid пользователя
+    - токен
+    - новый пароль
+    """
 
     uid = serializers.CharField()
     token = serializers.CharField()

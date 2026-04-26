@@ -11,7 +11,6 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = (
         "email",
-        "username",
         "is_active",
         "is_staff",
         "is_superuser",
@@ -29,7 +28,6 @@ class CustomUserAdmin(UserAdmin):
                 "classes": ("wide",),
                 "fields": (
                     "email",
-                    "username",
                     "password1",
                     "password2",
                     "phone_number",

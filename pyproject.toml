@@ -21,6 +21,7 @@ psycopg2 = "^2.9.12"
 django-phonenumber-field = "^8.4.0"
 phonenumbers = "^9.0.28"
 djangorestframework-stubs = "^3.16.9"
+django-filter = "^25.2"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
