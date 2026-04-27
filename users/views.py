@@ -14,6 +14,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from config import settings
 from users.serializers import (
     CustomTokenSerializer,
+    EmptySerializer,
     PasswordResetConfirmSerializer,
     PasswordResetRequestSerializer,
     RegisterSerializer,
@@ -36,6 +37,7 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [
         AllowAny,
     ]
+    filter_backends = []
 
     def perform_create(self, serializer):
         """
@@ -62,19 +64,24 @@ class VerifyEmailView(generics.GenericAPIView):
     Активирует пользователя при валидном токене
     """
 
+    serializer_class = EmptySerializer
     permission_classes = [AllowAny]
+    pagination_class = None
+    filter_backends = []
 
     def get(self, request):
         """Проверяет ссылку для активации аккаунта пользователя, активирует аккаунт"""
         uid = request.query_params.get("uid")
         token = request.query_params.get("token")
-
+        if not uid or not token:
+            logger.warning("uid or token are missing")
+            return Response({"detail": "uid и token обязательны"}, status=status.HTTP_400_BAD_REQUEST)
         try:
             user_id = force_str(urlsafe_base64_decode(uid))
             user = User.objects.get(pk=user_id)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            logger.warning(f"Invalid link: uid={uid}")
-            return Response({"detail": "Неверная ссылка"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            logger.warning(f"Invalid uid: {uid}")
+            return Response({"detail": "Некорректный uid"}, status=status.HTTP_400_BAD_REQUEST)
 
         if token_generator.check_token(user, token):
             user.is_active = True
@@ -91,6 +98,7 @@ class CustomTokenView(TokenObtainPairView):
     """JWT авторизация пользователя. Возвращает access и refresh токены"""
 
     serializer_class = CustomTokenSerializer
+    filter_backends = []
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
@@ -105,6 +113,7 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [
         IsAuthenticated,
     ]
+    filter_backends = []
 
     def get_object(self):
         """Возвращает объект пользователя"""
@@ -114,9 +123,11 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 class LogoutView(generics.GenericAPIView):
     """Logout endpoint. Не выполняет серверных действий. Используется клиентом для удаления токена"""
 
+    serializer_class = EmptySerializer
     permission_classes = [
         IsAuthenticated,
     ]
+    filter_backends = []
 
     def post(self, request):
         return Response({"detail": "Успешный выход из профиля"}, status=status.HTTP_200_OK)
@@ -132,6 +143,7 @@ class PasswordResetRequestView(generics.GenericAPIView):
     permission_classes = [
         AllowAny,
     ]
+    filter_backends = []
 
     def post(self, request):
         """Сброс пароля, отправка письма для подтверждения"""
@@ -174,6 +186,7 @@ class PasswordResetConfirmView(generics.GenericAPIView):
     permission_classes = [
         AllowAny,
     ]
+    filter_backends = []
 
     def post(self, request):
         """Подтверждение сброса пароля, сохранение нового пароля"""

@@ -14,8 +14,10 @@ class RegisterSerializer(serializers.ModelSerializer):
     - создание неактивного пользователя
     """
 
+    email = serializers.EmailField()
     password = serializers.CharField(write_only=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True)
+    username = serializers.CharField()
 
     class Meta:
         model = CustomUser
@@ -76,3 +78,7 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         return attrs
+
+
+class EmptySerializer(serializers.Serializer):
+    pass

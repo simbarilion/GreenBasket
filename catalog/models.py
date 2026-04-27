@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -80,7 +82,7 @@ class Product(SlugMixin):
 
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE, related_name="products")
     name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)])
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.01"))])
     image = models.ImageField(
         upload_to="products/", validators=[validate_image], default="products/images/default.png"
     )

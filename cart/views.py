@@ -30,7 +30,8 @@ class CartViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """Возвращает список товаров в корзине"""
-        cart = Cart.objects.prefetch_related("items__product").get(user=request.user)
+        cart = self.get_cart(request)
+        cart = Cart.objects.prefetch_related("items__product").get(pk=cart.pk)
         serializer = CartSerializer(cart)
         return Response(serializer.data)
 
@@ -77,10 +78,10 @@ class CartViewSet(viewsets.ViewSet):
     def remove(self, request):
         """Удаляет товар из корзины"""
         cart = self.get_cart(request)
-        serializer = CartItemCreateUpdateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        product = serializer.validated_data["product"]
-        deleted, _ = CartItem.objects.filter(cart=cart, product=product).delete()
+        product_id = request.query_params.get("product")
+        if not product_id:
+            return Response({"detail": "Не указан product"}, status=400)
+        deleted, _ = CartItem.objects.filter(cart=cart, product_id=product_id).delete()
         if not deleted:
             return Response({"detail": "Товар не найден"}, status=404)
         return Response({"detail": "Товар удален"}, status=204)
