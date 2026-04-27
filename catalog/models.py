@@ -42,7 +42,7 @@ class Category(SlugMixin):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
-        ordering = ["name", ""]
+        ordering = ["name"]
 
 
 class SubCategory(SlugMixin):
