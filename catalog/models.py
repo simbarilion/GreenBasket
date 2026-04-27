@@ -7,6 +7,8 @@ from django.utils.text import slugify
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
+from catalog.validators import validate_image
+
 
 class SlugMixin(models.Model):
     """Универсальная модель-миксин для создания slug"""
@@ -40,7 +42,7 @@ class Category(SlugMixin):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
-        ordering = ["name"]
+        ordering = ["name", ""]
 
 
 class SubCategory(SlugMixin):
@@ -74,8 +76,10 @@ class Product(SlugMixin):
 
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE, related_name="products")
     name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    image = models.ImageField(upload_to="products/", default="products/images/default.png")
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)])
+    image = models.ImageField(
+        upload_to="products/", validators=[validate_image], default="products/images/default.png"
+    )
     image_small = ImageSpecField(
         source="image",
         processors=[ResizeToFill(200, 200)],
