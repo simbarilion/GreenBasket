@@ -30,7 +30,7 @@ class CartViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """Возвращает список товаров в корзине"""
-        cart = self.get_cart(request)
+        cart = Cart.objects.prefetch_related("items__product").get(user=request.user)
         serializer = CartSerializer(cart)
         return Response(serializer.data)
 
@@ -54,34 +54,40 @@ class CartViewSet(viewsets.ViewSet):
         else:
             item.quantity = quantity
         item.save()
-        return Response({"detail": "Товар добавлен в корзину"})
+        return Response({"detail": "Товар добавлен в корзину"}, status=201)
 
     @action(detail=False, methods=["patch"])
     def update_item(self, request):
         """Обновляет количество товара в корзине"""
         cart = self.get_cart(request)
-        product_id = request.data.get("product")
-        quantity = request.data.get("quantity")
+        serializer = CartItemCreateUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        quantity = serializer.validated_data["quantity"]
+        product = serializer.validated_data["product"]
         try:
-            item = CartItem.objects.get(cart=cart, product_id=product_id)
+            item = CartItem.objects.get(cart=cart, product_id=product.id)
         except CartItem.DoesNotExist:
             return Response({"detail": "Товар не найден"}, status=404)
 
         item.quantity = quantity
         item.save()
-        return Response({"detail": "Количество обновлено"})
+        return Response({"detail": "Количество обновлено"}, status=200)
 
     @action(detail=False, methods=["delete"])
     def remove(self, request):
         """Удаляет товар из корзины"""
         cart = self.get_cart(request)
-        product_id = request.data.get("product")
-        CartItem.objects.filter(cart=cart, product_id=product_id).delete()
-        return Response({"detail": "Товар удален"})
+        serializer = CartItemCreateUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        product = serializer.validated_data["product"]
+        deleted, _ = CartItem.objects.filter(cart=cart, product=product).delete()
+        if not deleted:
+            return Response({"detail": "Товар не найден"}, status=404)
+        return Response({"detail": "Товар удален"}, status=204)
 
     @action(detail=False, methods=["delete"])
     def clear(self, request):
         """Очищает корзину"""
         cart = self.get_cart(request)
         cart.items.all().delete()
-        return Response({"detail": "Корзина очищена"})
+        return Response({"detail": "Корзина очищена"}, status=204)

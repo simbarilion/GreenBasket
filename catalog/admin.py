@@ -44,6 +44,7 @@ class ProductAdmin(admin.ModelAdmin):
         "name",
         "slug",
         "subcategory",
+        "price",
         "image",
         "created_at",
         "updated_at",
