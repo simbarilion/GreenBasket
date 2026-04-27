@@ -6,7 +6,7 @@ from users.models import CustomUser
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    """Класс для настройки админ-панели"""
+    """Добавляет пользователей в админ-панель"""
 
     model = CustomUser
     list_display = (
