@@ -1,0 +1,39 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/products/:id/"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: Bearer <token>
+      description: "Added as a part of security scheme: bearer"
+  pathVariables:
+    - key: id
+      value: "8899"
+      description: A unique integer value identifying this Товар.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "category": {
+          "id": 5518,
+          "name": "string",
+          "slug": "ThYMyNUQvX"
+        },
+        "id": 2445,
+        "image": "string",
+        "name": "string",
+        "price": "-.9",
+        "subcategory": "string",
+        "slug": "n"
+      }
+order: 1000

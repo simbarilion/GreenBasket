@@ -1,0 +1,83 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/categories/?ordering=string&page=4175&page_size=4175&search=string"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: Bearer <token>
+      description: "Added as a part of security scheme: bearer"
+  queryParams:
+    - key: ordering
+      value: string
+      description: Which field to use when ordering the results.
+    - key: page
+      value: "4175"
+      description: A page number within the paginated result set.
+    - key: page_size
+      value: "4175"
+      description: Number of results to return per page.
+    - key: search
+      value: string
+      description: A search term.
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "count": 123,
+        "results": [
+          {
+            "id": 9111,
+            "image": "https://wxprmPVwbWsEoZPjbvlHbSoGYxStZQ.fbsaX.P5Pgsxs-Ay-ogOXbCMMzcuRn1bAo-MHfI8EUFqpRqyovv4T",
+            "name": "string",
+            "subcategories": [
+              {
+                "category": "string",
+                "id": 5669,
+                "image": "https://PUhvORFiLotO.ungF+2qKRYZTkf",
+                "name": "string",
+                "slug": "XrRO5U8Q5YR"
+              },
+              {
+                "category": "string",
+                "id": 7090,
+                "image": "https://bW.zqYlaAdhib09xBSz0jgevHky6GPp,BBSD7Pwwo9SsBVM",
+                "name": "string",
+                "slug": "4LqLNaXbSVZ"
+              }
+            ],
+            "slug": "F2wHYD5K"
+          },
+          {
+            "id": 7290,
+            "image": "http://lsCYBXJrZAmDxbYRAXdvVZstjjwqmaX.urKuiD-PJQdGtufREyaIz7FoYvUa.EZOuK+mIEF51obAVAxKFOMFsx6vX1YYZo.6",
+            "name": "string",
+            "subcategories": [
+              {
+                "category": "string",
+                "id": 8956,
+                "image": "https://cAWfLkmiOynNMslINoHUIXPNDGwxvSttR.dqdB8HjovVqhehaq,XpKTgOli9mSf14oVWl,0W7t6OeWT-LcvCVtEspA",
+                "name": "string",
+                "slug": "uBOU"
+              },
+              {
+                "category": "string",
+                "id": 2912,
+                "image": "https://eBB.fkqApuhCH",
+                "name": "string",
+                "slug": "qgb0"
+              }
+            ],
+            "slug": "mYhYIOs"
+          }
+        ],
+        "next": "http://api.example.org/accounts/?page=4",
+        "previous": "http://api.example.org/accounts/?page=2"
+      }
+order: 1000

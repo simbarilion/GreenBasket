@@ -1,0 +1,87 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/catalog/categories/?ordering=string&page=8899&page_size=8899&\
+    search=string"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: Bearer <token>
+      description: "Added as a part of security scheme: bearer"
+  queryParams:
+    - key: ordering
+      value: string
+      description: Which field to use when ordering the results.
+    - key: page
+      value: "8899"
+      description: A page number within the paginated result set.
+    - key: page_size
+      value: "8899"
+      description: Number of results to return per page.
+    - key: search
+      value: string
+      description: A search term.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: >-
+      {
+        "count": 123,
+        "results": [
+          {
+            "id": 8630,
+            "image": "https://ihCcbxctJZqyoxXoDUMXUe.winF72iryPB",
+            "name": "string",
+            "subcategories": [
+              {
+                "category": "string",
+                "id": 4091,
+                "image": "http://VMJmincQgcSHDgZlyFTWfAfeJD.ejaeCGfUV6nZuVMuShxF8yas9Rk6z.8OR4cnI",
+                "name": "string",
+                "slug": "s5YegUf2"
+              },
+              {
+                "category": "string",
+                "id": 9499,
+                "image": "http://Q.rxLDjECzB.HskomTfhKmFePY8l9Yna0a,enr70PXzOP6faIkHGdMl8RM025iWLCqwm",
+                "name": "string",
+                "slug": "R7JtSxbSJ"
+              }
+            ],
+            "slug": "Oxg"
+          },
+          {
+            "id": 6405,
+            "image": "https://EvgzTBc.uugkim7-Y6oZw5c+QfkxVDBXZ05A4pP6Zeh,0Sv-I48hL9ZqwuiKmcfc",
+            "name": "string",
+            "subcategories": [
+              {
+                "category": "string",
+                "id": 5399,
+                "image": "https://PJ.kzaMNDJqu56edBXxaZh4dIfqiazm88mwtmr0jzg3kcLCF",
+                "name": "string",
+                "slug": "53kn1s"
+              },
+              {
+                "category": "string",
+                "id": 9234,
+                "image": "http://ArGNXBbXis.oifkOlhAZnYwNliTmcHA52ArS+pOWdfWz9PpJCZ9PE+IDU32iESvm9",
+                "name": "string",
+                "slug": "4"
+              }
+            ],
+            "slug": "km6AWk9RdE"
+          }
+        ],
+        "next": "http://api.example.org/accounts/?page=4",
+        "previous": "http://api.example.org/accounts/?page=2"
+      }
+order: 1000

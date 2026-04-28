@@ -1,0 +1,37 @@
+$kind: http-request
+description: |-
+  Просмотр товаров.
+  list: Возвращает список товаров с категорией и подкатегорией (с пагинацией). Доступны:
+   пагинация,
+   поиск названию (вхождение подстроки),
+   сортировка по полям ("name", "subcategory__name", "subcategory__category__name"),
+   фильтрация по категориям через slug ("frukty", "ovoshchi", "molochnye-produkty" и др.),
+   фильтрация по подкатегориям через slug ("tsitrusovye", "iagody", "korneplody", "listovye", "plodovye" и др.),
+  retrieve: Возвращает детальную информацию о товаре по id товара
+url: "{{baseUrl}}/catalog/products/?category=string&ordering=string&page=4175&page_size=4175&search=string&subcategory=string"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: category
+    value: string
+  - key: ordering
+    value: string
+    description: Which field to use when ordering the results.
+  - key: page
+    value: "4175"
+    description: A page number within the paginated result set.
+  - key: page_size
+    value: "4175"
+    description: Number of results to return per page.
+  - key: search
+    value: string
+    description: A search term.
+  - key: subcategory
+    value: string
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/catalog products list.resources/examples
+order: 2000

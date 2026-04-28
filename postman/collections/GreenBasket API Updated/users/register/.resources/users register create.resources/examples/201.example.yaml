@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/users/register/"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: Bearer <token>
+      description: "Added as a part of security scheme: bearer"
+  body:
+    type: json
+    content: |-
+      {
+        "email": "1S0@YydeXDSJS.ulza",
+        "password": "string",
+        "password2": "string",
+        "username": "string",
+        "phone_number": "string",
+        "city": 9393
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "email": "sdMhiB@JJtbtZrJYwKlmGOpwSJmkzdqs.lmlp",
+        "username": "string",
+        "phone_number": "string",
+        "city": 978
+      }
+order: 1000
