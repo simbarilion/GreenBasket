@@ -62,14 +62,14 @@
 
 ## Технологический стек
 
-**- Python 3.14
-- Django
-- Django Rest Framework
-- PostgreSQL
-- Docker + Docker Compose
-- Gunicorn
-- drf-spectacular
-- Linters: Flake8, Black, isort**
+- **Python 3.14**
+- **Django**
+- **Django Rest Framework**
+- **PostgreSQL**
+- **Docker + Docker Compose**
+- **Gunicorn**
+- **drf-spectacular**
+- **Linters**: Flake8, Black, isort**
 
 ## Структура проекта
 
