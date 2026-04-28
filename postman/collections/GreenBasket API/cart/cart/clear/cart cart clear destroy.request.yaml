@@ -1,4 +1,5 @@
 $kind: http-request
+name: cart cart clear destroy
 description: Очищает корзину
 url: "{{baseUrl}}/cart/cart/clear/"
 method: DELETE
@@ -8,6 +9,6 @@ body:
 auth:
   type: bearer
   credentials:
-    token: "{{bearerToken}}"
+    token: "{{accessToken}}"
 examples: ./.resources/cart cart clear destroy.resources/examples
 order: 1000

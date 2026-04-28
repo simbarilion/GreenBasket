@@ -1,0 +1,21 @@
+$kind: http-request
+description: |-
+  Добавляет товар в корзину.
+  Если товар уже в корзине, обновляет количество
+url: "{{baseUrl}}/cart/add/"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "product": 8507,
+      "quantity": 1291763622
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/cart add create.resources/examples
+order: 1000

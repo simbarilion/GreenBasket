@@ -1,0 +1,12 @@
+$kind: http-request
+description: Удаляет товар из корзины
+url: "{{baseUrl}}/cart/remove/?product=4175"
+method: DELETE
+queryParams:
+  product: "4175"
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/cart remove destroy.resources/examples
+order: 1000

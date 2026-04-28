@@ -1,0 +1,25 @@
+$kind: http-request
+description: |-
+  API endpoint профиля пользователя.
+  Позволяет:
+  - получить текущего пользователя
+  - обновить данные профиля
+url: "{{baseUrl}}/users/profile/"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "username": "rW42w73D",
+      "phone_number": "string",
+      "city": 7126
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/users profile update.resources/examples
+order: 2000

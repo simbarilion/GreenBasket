@@ -1,6 +1,7 @@
 $kind: http-request
+name: cart cart retrieve
 description: Возвращает список товаров в корзине
-url: "{{baseUrl}}/cart/cart/"
+url: "{{baseUrl}}/cart/"
 method: GET
 body:
   type: text
@@ -8,6 +9,6 @@ body:
 auth:
   type: bearer
   credentials:
-    token: "{{bearerToken}}"
+    token: "{{accessToken}}"
 examples: ./.resources/cart cart retrieve.resources/examples
 order: 1000
