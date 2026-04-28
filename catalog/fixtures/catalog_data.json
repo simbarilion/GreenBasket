@@ -1,0 +1,119 @@
+[
+    {
+        "name": "Фрукты",
+        "image": "categories/fruits.jpg",
+        "subcategories": [
+            {
+                "name": "Цитрусовые",
+                "image": "subcategories/citrus.jpg",
+                "products": [
+                    {"name": "Апельсин", "price": 180.0},
+                    {"name": "Лимон", "price": 80.0},
+                    {"name": "Мандарин", "price": 130.0},
+                    {"name": "Грейпфрут", "price": 160.0},
+                    {"name": "Лайм", "price": 190.0}
+                ]
+            },
+            {
+                "name": "Ягоды",
+                "image": "subcategories/berries.jpg",
+                "products": [
+                    {"name": "Клубника", "price": 650.0},
+                    {"name": "Черника", "price": 900.0},
+                    {"name": "Малина", "price": 500.0},
+                    {"name": "Ежевика", "price": 550.0},
+                    {"name": "Смородина", "price": 330.0}
+                ]
+            },
+            {
+                "name": "Экзотические",
+                "image": "subcategories/exotic.jpg",
+                "products": [
+                    {"name": "Манго", "price": 380.0},
+                    {"name": "Ананас", "price": 400.0},
+                    {"name": "Киви", "price": 210.0},
+                    {"name": "Папайя", "price": 650.0},
+                    {"name": "Авокадо", "price": 400.0}
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Овощи",
+        "image": "categories/vegetables.jpg",
+        "subcategories": [
+            {
+                "name": "Корнеплоды",
+                "image": "subcategories/root.jpg",
+                "products": [
+                    {"name": "Морковь", "price": 40.0},
+                    {"name": "Свекла", "price": 45.0},
+                    {"name": "Картофель", "price": 60.0},
+                    {"name": "Редис", "price": 90.0},
+                    {"name": "Репа", "price": 40.0}
+                ]
+            },
+            {
+                "name": "Листовые",
+                "image": "subcategories/leafy.jpg",
+                "products": [
+                    {"name": "Салат", "price": 70.0},
+                    {"name": "Шпинат", "price": 130.0},
+                    {"name": "Руккола", "price": 80.0},
+                    {"name": "Капуста", "price": 35.0},
+                    {"name": "Пекинская капуста", "price": 80.0}
+                ]
+            },
+            {
+                "name": "Плодовые",
+                "image": "subcategories/fruitveg.jpg",
+                "products": [
+                    {"name": "Помидор", "price": 170.0},
+                    {"name": "Огурец", "price": 210.0},
+                    {"name": "Баклажан", "price": 170.0},
+                    {"name": "Перец", "price": 260.0},
+                    {"name": "Кабачок", "price": 110.0}
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Молочные продукты",
+        "image": "categories/dairy.jpg",
+        "subcategories": [
+            {
+                "name": "Молоко",
+                "image": "subcategories/milk.jpg",
+                "products": [
+                    {"name": "Молоко 1%", "price": 92.0},
+                    {"name": "Молоко 2.5%", "price": 95.0},
+                    {"name": "Молоко 3.2%", "price": 100.0},
+                    {"name": "Безлактозное молоко", "price": 150.0},
+                    {"name": "Козье молоко", "price": 180.0}
+                ]
+            },
+            {
+                "name": "Сыры",
+                "image": "subcategories/cheese.jpg",
+                "products": [
+                    {"name": "Чеддер", "price": 400.0},
+                    {"name": "Моцарелла", "price": 460.0},
+                    {"name": "Пармезан", "price": 530.0},
+                    {"name": "Брынза", "price": 380.0},
+                    {"name": "Гауда", "price": 410.0}
+                ]
+            },
+            {
+                "name": "Йогурты",
+                "image": "subcategories/yogurt.jpg",
+                "products": [
+                    {"name": "Йогурт натуральный", "price": 60.0},
+                    {"name": "Йогурт клубничный", "price": 68.0},
+                    {"name": "Йогурт греческий", "price": 70.0},
+                    {"name": "Йогурт питьевой", "price": 50.0},
+                    {"name": "Йогурт без сахара", "price": 56.0}
+                ]
+            }
+        ]
+    }
+]
