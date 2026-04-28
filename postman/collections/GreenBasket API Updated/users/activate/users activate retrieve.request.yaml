@@ -1,0 +1,10 @@
+$kind: http-request
+description: Проверяет ссылку для активации аккаунта пользователя, активирует аккаунт
+url: "{{baseUrl}}/users/activate/"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/users activate retrieve.resources/examples
+order: 1000

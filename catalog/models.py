@@ -1,11 +1,11 @@
-import uuid
+from decimal import Decimal
 
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.utils.text import slugify
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from slugify import slugify
 
 from catalog.validators import validate_image
 
@@ -20,7 +20,13 @@ class SlugMixin(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = f"{slugify(self.name)}-{uuid.uuid4().hex[:6]}"
+            base = slugify(self.name) or "item"
+            slug = base
+            i = 1
+            while self.__class__.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base}-{i}"
+                i += 1
+            self.slug = slug
         super().save(*args, **kwargs)
 
 
@@ -42,7 +48,7 @@ class Category(SlugMixin):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
-        ordering = ["name", ""]
+        ordering = ["name"]
 
 
 class SubCategory(SlugMixin):
@@ -76,7 +82,7 @@ class Product(SlugMixin):
 
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE, related_name="products")
     name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)])
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.01"))])
     image = models.ImageField(
         upload_to="products/", validators=[validate_image], default="products/images/default.png"
     )

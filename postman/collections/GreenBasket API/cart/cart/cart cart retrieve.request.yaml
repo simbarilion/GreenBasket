@@ -1,0 +1,14 @@
+$kind: http-request
+name: cart cart retrieve
+description: Возвращает список товаров в корзине
+url: "{{baseUrl}}/cart/"
+method: GET
+body:
+  type: text
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: "{{accessToken}}"
+examples: ./.resources/cart cart retrieve.resources/examples
+order: 1000

@@ -23,6 +23,8 @@ phonenumbers = "^9.0.28"
 djangorestframework-stubs = "^3.16.9"
 django-filter = "^25.2"
 django-imagekit = "^6.1.0"
+python-slugify = "^8.0.4"
+drf-spectacular = "^0.29.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

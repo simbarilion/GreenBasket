@@ -1,0 +1,16 @@
+$kind: collection
+name: login
+scripts:
+  - type: http:afterResponse
+    code: "pm.test(\"Save tokens\", function () {\r
+
+      \    var jsonData = pm.response.json();\r
+
+      \r
+
+      \    pm.environment.set(\"accessToken\", jsonData.access);\r
+
+      \    pm.environment.set(\"refreshToken\", jsonData.refresh);\r
+
+      });"
+order: 2000

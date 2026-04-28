@@ -1,0 +1,14 @@
+$kind: http-request
+name: cart cart remove destroy
+description: Удаляет товар из корзины
+url: "{{baseUrl}}/cart/cart/remove/"
+method: DELETE
+body:
+  type: json
+  content: "{\r\n  \"product\": 5\r\n}"
+auth:
+  type: bearer
+  credentials:
+    token: "{{accessToken}}"
+examples: ./.resources/cart cart remove destroy.resources/examples
+order: 1000
