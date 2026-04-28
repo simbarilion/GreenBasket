@@ -31,6 +31,12 @@ class CartItemCreateUpdateSerializer(serializers.ModelSerializer):
         return value
 
 
+class RemoveItemSerializer(serializers.Serializer):
+    """Сериализатор удаления товара из корзины"""
+
+    product = serializers.IntegerField()
+
+
 class CartSerializer(serializers.ModelSerializer):
     """Сериализатор корзины для товаров пользователя"""
 

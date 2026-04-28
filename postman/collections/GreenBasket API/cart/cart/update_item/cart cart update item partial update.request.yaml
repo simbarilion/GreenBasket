@@ -1,0 +1,13 @@
+$kind: http-request
+description: Обновляет количество товара в корзине
+url: "{{baseUrl}}/cart/cart/update_item/"
+method: PATCH
+body:
+  type: text
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/cart cart update item partial update.resources/examples
+order: 1000

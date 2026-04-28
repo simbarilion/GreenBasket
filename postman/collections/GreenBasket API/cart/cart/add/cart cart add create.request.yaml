@@ -1,0 +1,15 @@
+$kind: http-request
+description: |-
+  Добавляет товар в корзину.
+  Если товар уже в корзине, обновляет количество
+url: "{{baseUrl}}/cart/cart/add/"
+method: POST
+body:
+  type: text
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/cart cart add create.resources/examples
+order: 1000

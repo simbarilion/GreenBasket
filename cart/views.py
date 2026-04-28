@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -7,10 +8,11 @@ from .models import Cart, CartItem
 from .serializers import (
     CartItemCreateUpdateSerializer,
     CartSerializer,
+    RemoveItemSerializer,
 )
 
 
-class CartViewSet(viewsets.ViewSet):
+class CartViewSet(viewsets.GenericViewSet):
     """
     Автосоздание корзины.
     list: возвращает список товаров в корзине, общее количество, общую сумму
@@ -35,6 +37,10 @@ class CartViewSet(viewsets.ViewSet):
         serializer = CartSerializer(cart)
         return Response(serializer.data)
 
+    @extend_schema(
+        request=CartItemCreateUpdateSerializer,
+        responses={201: None},
+    )
     @action(detail=False, methods=["post"])
     def add(self, request):
         """
@@ -57,6 +63,9 @@ class CartViewSet(viewsets.ViewSet):
         item.save()
         return Response({"detail": "Товар добавлен в корзину"}, status=201)
 
+    @extend_schema(
+        request=CartItemCreateUpdateSerializer,
+    )
     @action(detail=False, methods=["patch"])
     def update_item(self, request):
         """Обновляет количество товара в корзине"""
@@ -74,21 +83,26 @@ class CartViewSet(viewsets.ViewSet):
         item.save()
         return Response({"detail": "Количество обновлено"}, status=200)
 
+    @extend_schema(parameters=[RemoveItemSerializer])
     @action(detail=False, methods=["delete"])
     def remove(self, request):
         """Удаляет товар из корзины"""
         cart = self.get_cart(request)
-        product_id = request.query_params.get("product")
-        if not product_id:
-            return Response({"detail": "Не указан product"}, status=400)
+        serializer = RemoveItemSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        product_id = serializer.validated_data["product"]
         deleted, _ = CartItem.objects.filter(cart=cart, product_id=product_id).delete()
         if not deleted:
             return Response({"detail": "Товар не найден"}, status=404)
-        return Response({"detail": "Товар удален"}, status=204)
+        return Response(status=204)
 
+    @extend_schema(
+        request=None,
+        responses={204: None},
+    )
     @action(detail=False, methods=["delete"])
     def clear(self, request):
         """Очищает корзину"""
         cart = self.get_cart(request)
         cart.items.all().delete()
-        return Response({"detail": "Корзина очищена"}, status=204)
+        return Response(status=204)
